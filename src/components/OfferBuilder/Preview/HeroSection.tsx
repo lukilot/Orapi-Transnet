@@ -24,7 +24,11 @@ export default function HeroSection({ industry, mainProduct }: HeroSectionProps)
         name: "Wybierz Produkt",
         code: undefined,
         image: undefined,
-        specs: { temp: 0, dilution: "-", isEco: false, ph: 7 }
+        specs: { temp: 0, dilution: "-", isEco: false, ph: 7 },
+        selectedAttributeKeys: [],
+        price: 0,
+        quantity: 0,
+        discount: 0
     };
 
     return (
