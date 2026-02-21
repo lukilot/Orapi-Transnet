@@ -36,6 +36,7 @@ export const MOCK_SALES_REPS: import('./types').SalesRep[] = [
     { name: "Florkowski Jacek", phone: "+48 602 175 962", email: "jacek.florkowski@orapi.com" },
     { name: "Główczyk Janusz", phone: "+48 726 668 361", email: "jasjanusz@interia.pl" },
     { name: "Karwowski Ireneusz", phone: "+48 786 676 079", email: "i.karwowski.orapi@gmail.com" },
+    { name: "Korzeniewski Bartosz", phone: "+48 696 197 600", email: "bartek.korzeniewski@orapi.com.pl" },
     { name: "Lasota Tomasz", phone: "+48 505 284 326", email: "tom.lasota@interia.pl" },
     { name: "Mikołajczyk Mateusz", phone: "+48 573 058 135", email: "mateusz.orapi@gmail.com" },
     { name: "Orapi Biuro", phone: "+48 692 986 344", email: "biuro@orapi.com" },
