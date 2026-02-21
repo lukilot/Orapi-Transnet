@@ -420,6 +420,31 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
 
     return (
         <Document>
+            {/* Cover Page */}
+            <Page size="A4" style={{ backgroundColor: '#001F3F', flex: 1, padding: 40, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 12, alignSelf: 'flex-start' }}>
+                    <Image src="/assets/transnet-logo.png" style={{ width: 140 }} />
+                </View>
+
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ color: '#00A8E8', fontSize: 24, fontWeight: 'bold', marginBottom: 12, letterSpacing: 2 }}>OFERTA DLA</Text>
+                    <Text style={{ color: 'white', fontSize: 42, fontWeight: 'black', textAlign: 'center' }}>
+                        {offer.client.companyName || 'Szanownego Klienta'}
+                    </Text>
+                </View>
+
+                <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 1, borderColor: 'rgba(255,255,255,0.2)', paddingTop: 20 }}>
+                    <View>
+                        <Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 10, marginBottom: 4, fontWeight: 'bold' }}>DATA SPORZĄDZENIA</Text>
+                        <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>{offer.date}</Text>
+                    </View>
+                    <View style={{ alignItems: 'flex-end' }}>
+                        <Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 10, marginBottom: 4, fontWeight: 'bold' }}>WAŻNA DO</Text>
+                        <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>{offer.validUntil}</Text>
+                    </View>
+                </View>
+            </Page>
+
             {products.map((heroProduct, index) => {
                 const nettoPrice = heroProduct.price * (1 - ((heroProduct.discount || 0) / 100));
                 const bruttoPrice = nettoPrice * 1.23;
@@ -515,7 +540,7 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                             </View>
                         </View>
                         <DocumentFooter salesRep={offer.salesRep} />
-                        <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => `Strona ${pageNumber} z ${totalPages}`} fixed />
+                        <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => `Strona ${pageNumber - 1} z ${totalPages - 1}`} fixed />
                     </Page>
                 );
             })}
@@ -625,7 +650,7 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                     </View>
                 </View>
                 <DocumentFooter salesRep={offer.salesRep} />
-                <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => `Strona ${pageNumber} z ${totalPages}`} fixed />
+                <Text style={styles.pageNumber} render={({ pageNumber, totalPages }) => `Strona ${pageNumber - 1} z ${totalPages - 1}`} fixed />
             </Page>
         </Document>
     );
