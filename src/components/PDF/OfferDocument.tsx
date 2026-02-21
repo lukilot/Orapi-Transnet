@@ -421,26 +421,35 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
     return (
         <Document>
             {/* Cover Page */}
-            <Page size="A4" style={{ backgroundColor: '#001F3F', flex: 1, padding: 40, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
-                <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 12, alignSelf: 'flex-start' }}>
-                    <Image src="/assets/transnet-logo.png" style={{ width: 140 }} />
+            <Page size="A4" style={{ backgroundColor: '#001F3F', flex: 1, display: 'flex', flexDirection: 'column', position: 'relative', overflow: 'hidden' }}>
+                <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, opacity: 0.15 }}>
+                    <Image src={BackgroundAsset} style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scale(1.5) rotate(-5deg)' }} />
                 </View>
 
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text style={{ color: '#00A8E8', fontSize: 24, fontWeight: 'bold', marginBottom: 12, letterSpacing: 2 }}>OFERTA DLA</Text>
-                    <Text style={{ color: 'white', fontSize: 42, fontWeight: 'black', textAlign: 'center' }}>
-                        {offer.client.companyName || 'Szanownego Klienta'}
-                    </Text>
+                {/* White Top Bar for Logo */}
+                <View style={{ backgroundColor: 'white', paddingVertical: 40, paddingHorizontal: 50, flexDirection: 'row', alignItems: 'center', borderBottomWidth: 4, borderColor: '#00A8E8', zIndex: 10 }}>
+                    <Image src="/assets/transnet-logo.png" style={{ width: 160 }} />
                 </View>
 
-                <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 1, borderColor: 'rgba(255,255,255,0.2)', paddingTop: 20 }}>
-                    <View>
-                        <Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 10, marginBottom: 4, fontWeight: 'bold' }}>DATA SPORZĄDZENIA</Text>
-                        <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>{offer.date}</Text>
+                <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 50, zIndex: 10 }}>
+                    <View style={{ borderLeftWidth: 4, borderColor: '#00A8E8', paddingLeft: 24, paddingVertical: 8 }}>
+                        <Text style={{ fontFamily: 'Roboto', color: '#00A8E8', fontSize: 16, fontWeight: 'bold', marginBottom: 12, letterSpacing: 3, textTransform: 'uppercase' }}>OFERTA HANDLOWA DLA</Text>
+                        <Text style={{ fontFamily: 'Roboto', color: 'white', fontSize: 32, fontWeight: 'black', lineHeight: 1.2 }}>
+                            {offer.client.companyName || 'Szanownego Klienta'}
+                        </Text>
                     </View>
-                    <View style={{ alignItems: 'flex-end' }}>
-                        <Text style={{ color: 'rgba(255,255,255,0.6)', fontSize: 10, marginBottom: 4, fontWeight: 'bold' }}>WAŻNA DO</Text>
-                        <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>{offer.validUntil}</Text>
+                </View>
+
+                <View style={{ paddingHorizontal: 50, paddingBottom: 50, zIndex: 10 }}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderTopWidth: 1, borderColor: 'rgba(255,255,255,0.2)', paddingTop: 24 }}>
+                        <View>
+                            <Text style={{ fontFamily: 'Roboto', color: 'rgba(255,255,255,0.6)', fontSize: 10, marginBottom: 6, fontWeight: 'bold', letterSpacing: 1 }}>DATA SPORZĄDZENIA</Text>
+                            <Text style={{ fontFamily: 'Roboto', color: 'white', fontSize: 14, fontWeight: 'bold' }}>{offer.date}</Text>
+                        </View>
+                        <View style={{ alignItems: 'flex-end' }}>
+                            <Text style={{ fontFamily: 'Roboto', color: 'rgba(255,255,255,0.6)', fontSize: 10, marginBottom: 6, fontWeight: 'bold', letterSpacing: 1 }}>WAŻNA DO</Text>
+                            <Text style={{ fontFamily: 'Roboto', color: 'white', fontSize: 14, fontWeight: 'bold' }}>{offer.validUntil}</Text>
+                        </View>
                     </View>
                 </View>
             </Page>
