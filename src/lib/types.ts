@@ -1,6 +1,31 @@
 export type Industry = 'TRUCKS' | 'MARITIME' | 'INDUSTRY' | 'AGRICULTURE' | 'CONSTRUCTION';
 
-export interface ProductParam {
+export const INDUSTRY_LABELS: Record<Industry, string> = {
+    TRUCKS: 'Ciężarowe',
+    MARITIME: 'Morskie',
+    INDUSTRY: 'Przemysł',
+    AGRICULTURE: 'Rolnictwo',
+    CONSTRUCTION: 'Budownictwo',
+};
+
+export const AVAILABLE_FEATURES = [
+    "produkt kwasowy",
+    "produkt zasadowy",
+    "wysokie PH",
+    "niskie PH",
+    "produkt silnie pieniący",
+    "produkt nie pieniący",
+    "bezpieczeństwo",
+    "ekologiczny",
+    "certyfikat ECO CERT",
+    "certyfikat NSF",
+    "jakość spożywcza",
+    "niwelowanie zapachów",
+    "wysoka wydajność",
+    "może wyschnąć",
+    "do mycia ręcznego",
+    "do mycia automatycznego"
+]; export interface ProductParam {
     label: string;
     value: string;
     unit?: string;
@@ -12,7 +37,7 @@ export interface Product {
     code?: string;
     description: string;
     image?: string; // /canister-placeholder.png
-    selectedAttributeKeys?: ('temp' | 'dilution' | 'eco' | 'ph')[];
+    features: string[];
     specs: {
         temp: number; // e.g. 40
         dilution: string; // e.g. "1:50"
@@ -51,6 +76,8 @@ export interface OfferData {
     client: ClientDetails;
     products: Product[];
     salesRep: SalesRep;
+    paymentMethod: string;
+    paymentTerm: string;
 }
 
 export const INITIAL_OFFER: OfferData = {
@@ -74,5 +101,7 @@ export const INITIAL_OFFER: OfferData = {
         name: "Jan Kowalski",
         phone: "+48 123 456 789",
         email: "jan.kowalski@transnet.pl"
-    }
+    },
+    paymentMethod: "Przelew",
+    paymentTerm: "14 dni"
 };

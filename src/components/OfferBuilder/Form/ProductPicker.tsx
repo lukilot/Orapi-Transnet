@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Product } from '@/lib/types';
+import { Product, AVAILABLE_FEATURES } from '@/lib/types';
 import { MOCK_PRODUCTS } from '@/lib/mockData';
-import { Plus, Trash2, Box, Info } from 'lucide-react';
+import { Trash2, Box, Info } from 'lucide-react';
 import clsx from 'clsx';
 
 interface ProductPickerProps {
@@ -13,15 +13,18 @@ export default function ProductPicker({ selectedProducts, onChange }: ProductPic
     const [searchTerm, setSearchTerm] = useState('');
 
     const handleAddProduct = (product: Product) => {
-        // Enforce Single Product Limit: Replace existing with new
+        if (selectedProducts.length >= 6) {
+            alert("Maksymalna liczba produktów na jednej ofercie to 6.");
+            return;
+        }
+
         const newProduct: Product = {
             ...product,
-            id: `${product.id}-${Date.now()}`,
-            // Default select first 2 available attributes
-            selectedAttributeKeys: ['temp', 'dilution']
+            id: `${product.id}-${crypto.randomUUID()}`,
+            features: product.features && product.features.length > 0 ? product.features.slice(0, 4) : []
         };
 
-        onChange([newProduct]);
+        onChange([...selectedProducts, newProduct]);
         setSearchTerm('');
     };
 
@@ -31,33 +34,36 @@ export default function ProductPicker({ selectedProducts, onChange }: ProductPic
         onChange(newProducts);
     };
 
-    const handleUpdateProduct = (index: number, field: keyof Product, value: any) => {
+    const handleUpdateProduct = (index: number, field: keyof Product, value: string | number) => {
         const newProducts = [...selectedProducts];
         const product = newProducts[index];
 
         if (field === 'discount') {
             const max = product.maxDiscount || 100;
-            if (value > max) {
+            if (typeof value === 'number' && value > max) {
                 newProducts[index] = { ...product, discount: max };
             } else {
-                newProducts[index] = { ...product, discount: value };
+                newProducts[index] = { ...product, discount: value as number };
             }
+        } else if (field === 'quantity') {
+            newProducts[index] = { ...product, [field]: value as number };
         } else {
-            newProducts[index] = { ...product, [field]: value };
+            // fallback for string values just in case
+            (newProducts[index] as unknown as Record<string, unknown>)[field] = value;
         }
         onChange(newProducts);
     };
 
-    const toggleAttribute = (index: number, key: 'temp' | 'dilution' | 'eco' | 'ph') => {
+    const toggleAttribute = (index: number, feature: string) => {
         const newProducts = [...selectedProducts];
         const product = newProducts[index];
-        const currentKeys = product.selectedAttributeKeys || [];
+        const currentFeatures = product.features || [];
 
-        if (currentKeys.includes(key)) {
-            newProducts[index] = { ...product, selectedAttributeKeys: currentKeys.filter(k => k !== key) };
+        if (currentFeatures.includes(feature)) {
+            newProducts[index] = { ...product, features: currentFeatures.filter(f => f !== feature) };
         } else {
-            if (currentKeys.length < 3) {
-                newProducts[index] = { ...product, selectedAttributeKeys: [...currentKeys, key] };
+            if (currentFeatures.length < 4) {
+                newProducts[index] = { ...product, features: [...currentFeatures, feature] };
             }
         }
         onChange(newProducts);
@@ -78,8 +84,9 @@ export default function ProductPicker({ selectedProducts, onChange }: ProductPic
             <div className="mb-6 relative">
                 <input
                     type="text"
-                    placeholder="Wyszukaj produkt (np. Platinium)..."
-                    className="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A8E8] text-sm"
+                    placeholder={selectedProducts.length >= 6 ? "Osiągnięto limit 6 produktów" : "Wyszukaj produkt (np. Platinium)..."}
+                    disabled={selectedProducts.length >= 6}
+                    className="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A8E8] text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
@@ -106,7 +113,7 @@ export default function ProductPicker({ selectedProducts, onChange }: ProductPic
             <div className="space-y-4">
                 {selectedProducts.map((product, index) => {
                     const transactionPrice = product.price * (1 - (product.discount / 100));
-                    const currentAttributes = product.selectedAttributeKeys || [];
+                    const currentFeatures = product.features || [];
 
                     return (
                         <div key={product.id} className="bg-gray-50 p-4 rounded-md border border-gray-100">
@@ -125,26 +132,21 @@ export default function ProductPicker({ selectedProducts, onChange }: ProductPic
 
                             {/* Attributes Selection */}
                             <div className="mb-4">
-                                <p className="text-xs font-medium text-gray-400 mb-2">Wybierz Atrybuty (Max 3)</p>
+                                <p className="text-xs font-medium text-gray-400 mb-2">Wybierz Cechy Produktu (Max 4, po 2 na stronę)</p>
                                 <div className="flex flex-wrap gap-2">
-                                    {[
-                                        { key: 'temp', label: `Temp ${product.specs.temp > 0 ? product.specs.temp + '°C' : '-'}` },
-                                        { key: 'dilution', label: `Doz. ${product.specs.dilution}` },
-                                        { key: 'ph', label: `pH ${product.specs.ph}` },
-                                        ...(product.specs.isEco ? [{ key: 'eco', label: 'Eco-Friendly' }] : [])
-                                    ].map((attr) => (
+                                    {AVAILABLE_FEATURES.map((feature) => (
                                         <button
-                                            key={attr.key}
-                                            onClick={() => toggleAttribute(index, attr.key as any)}
-                                            disabled={!currentAttributes.includes(attr.key as any) && currentAttributes.length >= 3}
+                                            key={feature}
+                                            onClick={() => toggleAttribute(index, feature)}
+                                            disabled={!currentFeatures.includes(feature) && currentFeatures.length >= 4}
                                             className={clsx(
                                                 "px-2 py-1 text-xs rounded-full border transition-colors",
-                                                currentAttributes.includes(attr.key as any)
+                                                currentFeatures.includes(feature)
                                                     ? "bg-blue-100 border-blue-200 text-blue-700 font-medium"
                                                     : "bg-white border-gray-200 text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
                                             )}
                                         >
-                                            {attr.label}
+                                            {feature}
                                         </button>
                                     ))}
                                 </div>

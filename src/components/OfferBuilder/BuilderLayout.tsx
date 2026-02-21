@@ -33,15 +33,13 @@ export default function BuilderLayout() {
             </div>
 
             {/* Left Panel - Input Controls */}
-            <div className={`${activeTab === 'editor' ? 'block' : 'hidden'} lg:block w-full lg:w-1/2 h-full border-r border-gray-200 overflow-y-auto`}>
+            <div className={`${activeTab === 'editor' ? 'block' : 'hidden'} lg:block w-full lg:w-1/2 flex-1 lg:h-full border-r border-gray-200 overflow-y-auto min-h-0`}>
                 <FormPanel offer={offer} onChange={handleOfferChange} />
             </div>
 
             {/* Right Panel - Live Preview */}
-            <div className={`${activeTab === 'preview' ? 'block' : 'hidden'} lg:block w-full lg:w-1/2 h-full bg-slate-50 relative flex flex-col`}>
-                <div className="flex-1 overflow-y-auto p-4 lg:p-8 flex items-start justify-center">
-                    <PreviewPanel offer={offer} />
-                </div>
+            <div className={`${activeTab === 'preview' ? 'flex' : 'hidden'} lg:flex w-full lg:w-1/2 flex-1 lg:h-full bg-slate-50 relative flex-col overflow-hidden min-h-0`}>
+                <PreviewPanel offer={offer} />
             </div>
         </div>
     );

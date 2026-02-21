@@ -40,7 +40,13 @@ export default function FormPanel({ offer, onChange }: FormPanelProps) {
             />
 
             <OfferDetails
-                data={{ id: offer.id, date: offer.date, validUntil: offer.validUntil }}
+                data={{
+                    id: offer.id,
+                    date: offer.date,
+                    validUntil: offer.validUntil,
+                    paymentMethod: offer.paymentMethod,
+                    paymentTerm: offer.paymentTerm
+                }}
                 onChange={(details) => updateOffer(details)}
             />
 

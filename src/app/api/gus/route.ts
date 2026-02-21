@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-// @ts-ignore
 import Bir1 from 'bir1';
 
 export async function POST(request: Request) {

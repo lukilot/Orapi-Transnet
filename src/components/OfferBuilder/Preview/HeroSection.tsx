@@ -1,12 +1,39 @@
 import React from 'react';
-import { Industry, Product } from '@/lib/types';
-import { Thermometer, Droplets, Leaf, Package } from 'lucide-react';
+import { Industry, Product, INDUSTRY_LABELS } from '@/lib/types';
+import {
+    Droplets, Leaf, Package, Shield, Wind, Sparkles,
+    Zap, Hand, CheckCircle2, Factory, Sun, FlaskConical, AlertTriangle,
+    Droplet, Apple
+} from 'lucide-react';
 import Image from 'next/image';
 import clsx from 'clsx';
 
 interface HeroSectionProps {
     industry: Industry;
     mainProduct?: Product;
+}
+
+// Map features to specific visual styles
+const getFeatureStyle = (feature: string) => {
+    switch (feature) {
+        case "produkt kwasowy": return { icon: <FlaskConical className="w-4 h-4" />, color: "text-red-500", bg: "bg-red-50" };
+        case "produkt zasadowy": return { icon: <Droplet className="w-4 h-4" />, color: "text-blue-500", bg: "bg-blue-50" };
+        case "wysokie PH": return { icon: <AlertTriangle className="w-4 h-4" />, color: "text-purple-500", bg: "bg-purple-50" };
+        case "niskie PH": return { icon: <AlertTriangle className="w-4 h-4" />, color: "text-orange-500", bg: "bg-orange-50" };
+        case "produkt silnie pieniący": return { icon: <Wind className="w-4 h-4" />, color: "text-cyan-500", bg: "bg-cyan-50" };
+        case "produkt nie pieniący": return { icon: <Droplets className="w-4 h-4" />, color: "text-gray-500", bg: "bg-gray-50" };
+        case "bezpieczeństwo": return { icon: <Shield className="w-4 h-4" />, color: "text-green-500", bg: "bg-green-50" };
+        case "ekologiczny": return { icon: <Leaf className="w-4 h-4" />, color: "text-green-600", bg: "bg-green-50" };
+        case "certyfikat ECO CERT": return { icon: <CheckCircle2 className="w-4 h-4" />, color: "text-emerald-500", bg: "bg-emerald-50" };
+        case "certyfikat NSF": return { icon: <CheckCircle2 className="w-4 h-4" />, color: "text-blue-600", bg: "bg-blue-50" };
+        case "jakość spożywcza": return { icon: <Apple className="w-4 h-4" />, color: "text-red-400", bg: "bg-red-50" };
+        case "niwelowanie zapachów": return { icon: <Sparkles className="w-4 h-4" />, color: "text-indigo-400", bg: "bg-indigo-50" };
+        case "wysoka wydajność": return { icon: <Zap className="w-4 h-4" />, color: "text-yellow-500", bg: "bg-yellow-50" };
+        case "może wyschnąć": return { icon: <Sun className="w-4 h-4" />, color: "text-orange-400", bg: "bg-orange-50" };
+        case "do mycia ręcznego": return { icon: <Hand className="w-4 h-4" />, color: "text-blue-400", bg: "bg-blue-50" };
+        case "do mycia automatycznego": return { icon: <Factory className="w-4 h-4" />, color: "text-slate-500", bg: "bg-slate-50" };
+        default: return { icon: <CheckCircle2 className="w-4 h-4" />, color: "text-[#00A8E8]", bg: "bg-blue-50" };
+    }
 }
 
 export default function HeroSection({ industry, mainProduct }: HeroSectionProps) {
@@ -25,7 +52,7 @@ export default function HeroSection({ industry, mainProduct }: HeroSectionProps)
         code: undefined,
         image: undefined,
         specs: { temp: 0, dilution: "-", isEco: false, ph: 7 },
-        selectedAttributeKeys: [],
+        features: [],
         price: 0,
         quantity: 0,
         discount: 0
@@ -48,7 +75,7 @@ export default function HeroSection({ industry, mainProduct }: HeroSectionProps)
             {/* Layer 2: The Product (Center) */}
             <div className="absolute inset-0 z-10 flex flex-col items-center justify-center">
                 {product.image ? (
-                    <div className="relative w-64 h-64">
+                    <div className="relative w-[320px] h-[360px]">
                         <Image
                             src={product.image}
                             alt={product.name}
@@ -58,7 +85,7 @@ export default function HeroSection({ industry, mainProduct }: HeroSectionProps)
                     </div>
                 ) : (
                     /* Canister Placeholder - In valid app use actual image */
-                    <div className="relative w-48 h-64 bg-gradient-to-br from-white to-gray-200 rounded-lg shadow-2xl flex items-center justify-center border border-white/50">
+                    <div className="relative w-64 h-80 bg-gradient-to-br from-white to-gray-200 rounded-lg shadow-2xl flex items-center justify-center border border-white/50">
                         <div className="absolute inset-0 bg-white/40 backdrop-blur-sm rounded-lg" />
                         <Package className="w-24 h-24 text-gray-300 relative z-10" strokeWidth={1} />
 
@@ -70,50 +97,37 @@ export default function HeroSection({ industry, mainProduct }: HeroSectionProps)
                     </div>
                 )}
             </div>
-            {/* Layer 3: Data Badges (Right Overlay) */}
-            <div className="absolute top-[35%] -translate-y-1/2 right-8 z-20 flex flex-col gap-6 items-end">
-                {(product.selectedAttributeKeys || []).map((key, index) => {
-                    let icon, value, colorClass, bgClass;
-
-                    switch (key) {
-                        case 'temp':
-                            icon = <Thermometer className="w-4 h-4" />;
-                            value = product.specs.temp > 0 ? `${product.specs.temp}°C` : '-';
-                            colorClass = 'text-[#00A8E8]';
-                            bgClass = 'bg-blue-50';
-                            break;
-                        case 'dilution':
-                            icon = <Droplets className="w-4 h-4" />;
-                            value = product.specs.dilution;
-                            colorClass = 'text-[#00A8E8]';
-                            bgClass = 'bg-blue-50';
-                            break;
-                        case 'eco':
-                            icon = <Leaf className="w-4 h-4" />;
-                            value = 'Eco';
-                            colorClass = 'text-green-500';
-                            bgClass = 'bg-green-50';
-                            break;
-                        case 'ph':
-                            icon = <span className="text-[10px] font-bold">pH</span>;
-                            value = product.specs.ph;
-                            colorClass = 'text-purple-500';
-                            bgClass = 'bg-purple-50';
-                            break;
-                        default:
-                            return null;
-                    }
-
+            {/* Layer 3: Data Badges (Left Overlay) */}
+            <div className="absolute top-[35%] -translate-y-1/2 left-8 z-20 flex flex-col gap-6 items-start">
+                {(product.features || []).slice(0, 2).map((feature, index) => {
+                    const style = getFeatureStyle(feature);
                     return (
-                        <div key={key} className={clsx(
-                            "group flex items-center gap-2 bg-white/95 backdrop-blur-md pl-1.5 pr-3 py-1.5 rounded-full shadow-lg border border-white/50 transition-all hover:scale-105",
-                            index === 1 && "delay-75",
-                            index === 2 && "delay-150"
+                        <div key={feature} className={clsx(
+                            "group flex items-center gap-2 bg-white/95 backdrop-blur-md pr-3 pl-1.5 py-1.5 rounded-full shadow-lg border border-white/50 transition-all hover:scale-105",
+                            index === 1 && "delay-75"
                         )}>
-                            <div className={clsx("p-1.5 rounded-full", bgClass, colorClass)}>
-                                {icon}
+                            <div className={clsx("p-1.5 rounded-full", style.bg, style.color)}>
+                                {style.icon}
                             </div>
-                            <p className="text-sm font-bold text-[#001F3F]">{value}</p>
+                            <p className="text-[10px] sm:text-xs font-bold text-[#001F3F]">{feature}</p>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Layer 4: Data Badges (Right Overlay) */}
+            <div className="absolute top-[35%] -translate-y-1/2 right-8 z-20 flex flex-col gap-6 items-end">
+                {(product.features || []).slice(2, 4).map((feature, index) => {
+                    const style = getFeatureStyle(feature);
+                    return (
+                        <div key={feature} className={clsx(
+                            "group flex items-center gap-2 bg-white/95 backdrop-blur-md pl-1.5 pr-3 py-1.5 rounded-full shadow-lg border border-white/50 transition-all hover:scale-105",
+                            index === 1 && "delay-75"
+                        )}>
+                            <div className={clsx("p-1.5 rounded-full", style.bg, style.color)}>
+                                {style.icon}
+                            </div>
+                            <p className="text-[10px] sm:text-xs font-bold text-[#001F3F]">{feature}</p>
                         </div>
                     );
                 })}
@@ -123,7 +137,7 @@ export default function HeroSection({ industry, mainProduct }: HeroSectionProps)
             <div className="absolute bottom-8 left-8 z-20">
                 <h2 className="text-4xl font-extrabold text-[#001F3F] tracking-tight">{product.name}</h2>
                 <div className="flex items-center gap-3 mt-1">
-                    <p className="text-[#00A8E8] font-medium text-lg">{industry}</p>
+                    <p className="text-[#00A8E8] font-medium text-lg">{INDUSTRY_LABELS[industry]}</p>
                     {product.code && (
                         <>
                             <span className="w-1 h-1 bg-gray-300 rounded-full"></span>

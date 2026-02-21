@@ -17,6 +17,29 @@ export default function ClientDetails({ data, onChange }: ClientDetailsProps) {
         onChange({ ...data, [name]: value });
     };
 
+    // Parse stored phone string
+    const phoneParts = data.phone?.split(' ') || [];
+    const prefix = phoneParts[0]?.startsWith('+') ? phoneParts[0] : '+48';
+    const rawNumber = phoneParts[0]?.startsWith('+') ? phoneParts.slice(1).join('') : phoneParts.join('');
+
+    const formattedRawNumber = rawNumber.replace(/\D/g, '').replace(/(\d{3})(?=\d)/g, '$1 ').trim();
+
+    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        let val = e.target.value.replace(/\D/g, '');
+        if (val.length > 9) val = val.slice(0, 9);
+        let formatted = val;
+        if (val.length > 3 && val.length <= 6) {
+            formatted = `${val.slice(0, 3)} ${val.slice(3)}`;
+        } else if (val.length > 6) {
+            formatted = `${val.slice(0, 3)} ${val.slice(3, 6)} ${val.slice(6)}`;
+        }
+        onChange({ ...data, phone: `${prefix} ${formatted}`.trim() });
+    };
+
+    const handlePrefixChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        onChange({ ...data, phone: `${e.target.value} ${formattedRawNumber}`.trim() });
+    };
+
     const fetchGusData = async () => {
         if (!data.nip || data.nip.length < 10) {
             setError('Wprowadź poprawny NIP (10 cyfr)');
@@ -48,8 +71,12 @@ export default function ClientDetails({ data, onChange }: ClientDetailsProps) {
                 zip: gusData.kodPocztowy || '',
             });
 
-        } catch (err: any) {
-            setError(err.message || 'Błąd pobierania danych');
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message || 'Błąd pobierania danych');
+            } else {
+                setError('Błąd pobierania danych');
+            }
         } finally {
             setLoading(false);
         }
@@ -163,46 +190,61 @@ export default function ClientDetails({ data, onChange }: ClientDetailsProps) {
                     />
                 </div>
 
-                <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Osoba Kontaktowa</label>
+                {/* Highlighted Contact Fields */}
+                <div className="space-y-1 bg-orange-50/40 p-3 -mx-3 rounded-lg border border-orange-100">
+                    <label className="text-xs font-bold text-orange-600 uppercase">Osoba Kontaktowa *</label>
                     <div className="relative">
-                        <User className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+                        <User className="absolute left-3 top-2.5 w-4 h-4 text-orange-400" />
                         <input
                             type="text"
                             name="contactPerson"
                             value={data.contactPerson}
                             onChange={handleChange}
-                            className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A8E8] text-sm"
+                            className="w-full pl-9 pr-4 py-2 border border-orange-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm bg-white"
                             placeholder="Jan Nowak"
                         />
                     </div>
                 </div>
 
-                <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Telefon</label>
-                    <div className="relative">
-                        <Phone className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
-                        <input
-                            type="text"
-                            name="phone"
-                            value={data.phone}
-                            onChange={handleChange}
-                            className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A8E8] text-sm"
-                            placeholder="+48 000 000 000"
-                        />
+                <div className="space-y-1 bg-orange-50/40 p-3 -mx-3 rounded-lg border border-orange-100">
+                    <label className="text-xs font-bold text-orange-600 uppercase">Telefon *</label>
+                    <div className="flex gap-2">
+                        <select
+                            value={prefix}
+                            onChange={handlePrefixChange}
+                            className="w-24 px-2 py-2 border border-orange-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm bg-white"
+                        >
+                            <option value="+48">🇵🇱 +48</option>
+                            <option value="+49">🇩🇪 +49</option>
+                            <option value="+420">🇨🇿 +420</option>
+                            <option value="+421">🇸🇰 +421</option>
+                            <option value="+370">🇱🇹 +370</option>
+                            <option value="+44">🇬🇧 +44</option>
+                        </select>
+                        <div className="relative flex-1">
+                            <Phone className="absolute left-3 top-2.5 w-4 h-4 text-orange-400" />
+                            <input
+                                type="text"
+                                name="phone"
+                                value={formattedRawNumber}
+                                onChange={handlePhoneChange}
+                                className="w-full pl-9 pr-4 py-2 border border-orange-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm bg-white"
+                                placeholder="123 456 789"
+                            />
+                        </div>
                     </div>
                 </div>
 
-                <div className="space-y-1">
-                    <label className="text-xs font-medium text-gray-500 uppercase">Email</label>
+                <div className="space-y-1 bg-orange-50/40 p-3 -mx-3 rounded-lg border border-orange-100">
+                    <label className="text-xs font-bold text-orange-600 uppercase">Email *</label>
                     <div className="relative">
-                        <Mail className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+                        <Mail className="absolute left-3 top-2.5 w-4 h-4 text-orange-400" />
                         <input
                             type="email"
                             name="email"
                             value={data.email}
                             onChange={handleChange}
-                            className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A8E8] text-sm"
+                            className="w-full pl-9 pr-4 py-2 border border-orange-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400 text-sm bg-white"
                             placeholder="biuro@firma.pl"
                         />
                     </div>

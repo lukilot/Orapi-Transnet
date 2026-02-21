@@ -20,7 +20,7 @@ export default function IndustrySelector({ value, onChange }: IndustrySelectorPr
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
             <h3 className="text-lg font-semibold text-[#001F3F] mb-4">Branża</h3>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
                 {INDUSTRIES.map((industry) => {
                     const Icon = industry.icon;
                     const isSelected = value === industry.value;
