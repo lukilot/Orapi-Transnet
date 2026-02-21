@@ -13,11 +13,11 @@ export default function Footer({ salesRep }: FooterProps) {
 
                 {/* Static Company Data (Left) */}
                 <div className="text-xs text-gray-400 leading-relaxed">
-                    <p className="uppercase font-bold tracking-wider mb-2 text-white">Dane Firmy</p>
-                    <p className="font-bold text-white">ORAPI TRANSNET Sp. z o.o.</p>
-                    <p>ul. Domaniewska 37</p>
-                    <p>02-672 Warszawa</p>
-                    <p>NIP: 521-36-33-471</p>
+                    <p className="uppercase font-bold tracking-wider mb-2 text-white">Wyłączny importer produktów Transnet:</p>
+                    <p className="font-bold text-white">Pol-Frans Jacek Rybiński</p>
+                    <p>ul. Władysława Raczkiewicza 66</p>
+                    <p>05-075 Warszawa</p>
+                    <p>NIP: 5211223886</p>
                     <div className="flex items-center gap-2 mt-2 text-[#00A8E8]">
                         <Globe className="w-3 h-3" />
                         <span>www.orapi-transnet.pl</span>
