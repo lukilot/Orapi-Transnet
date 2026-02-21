@@ -138,6 +138,12 @@ export default function PreviewPanel({ offer }: PreviewPanelProps) {
                                 <HeroSection industry={offer.industry} mainProduct={products[currentPage]} />
                                 <div className="mt-4">
                                     <PricingTable products={[products[currentPage]]} hideTotals={true} />
+                                    {products[currentPage].description && (
+                                        <div className="mt-6 p-4 bg-gray-50 border border-gray-100 rounded-md">
+                                            <h4 className="text-xs font-bold text-[#001F3F] uppercase tracking-wider mb-2">Opis Produktu</h4>
+                                            <p className="text-sm text-gray-600 leading-relaxed">{products[currentPage].description}</p>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

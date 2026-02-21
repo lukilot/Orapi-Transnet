@@ -1,5 +1,5 @@
 import React from 'react';
-import { Industry, Product, INDUSTRY_LABELS } from '@/lib/types';
+import { Industry, Product } from '@/lib/types';
 import {
     Droplets, Leaf, Package, Shield, Wind, Sparkles,
     Zap, Hand, CheckCircle2, Factory, Sun, FlaskConical, AlertTriangle,
@@ -49,6 +49,7 @@ export default function HeroSection({ industry, mainProduct }: HeroSectionProps)
 
     const product = mainProduct || {
         name: "Wybierz Produkt",
+        category: undefined,
         code: undefined,
         image: undefined,
         specs: { temp: 0, dilution: "-", isEco: false, ph: 7 },
@@ -137,7 +138,9 @@ export default function HeroSection({ industry, mainProduct }: HeroSectionProps)
             <div className="absolute bottom-8 left-8 z-20">
                 <h2 className="text-4xl font-extrabold text-[#001F3F] tracking-tight">{product.name}</h2>
                 <div className="flex items-center gap-3 mt-1">
-                    <p className="text-[#00A8E8] font-medium text-lg">{INDUSTRY_LABELS[industry]}</p>
+                    {product.category && (
+                        <p className="text-[#00A8E8] font-bold text-sm tracking-wide">{product.category}</p>
+                    )}
                     {product.code && (
                         <>
                             <span className="w-1 h-1 bg-gray-300 rounded-full"></span>

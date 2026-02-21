@@ -31,9 +31,15 @@ export const AVAILABLE_FEATURES = [
     unit?: string;
 }
 
+export interface ProductVariant {
+    name: string; // e.g. "5 L", "20 L", "200 kg"
+    price: number;
+}
+
 export interface Product {
     id: string;
     name: string;
+    category?: string;
     code?: string;
     description: string;
     image?: string; // /canister-placeholder.png
@@ -48,6 +54,8 @@ export interface Product {
     quantity: number;
     discount: number; // percentage
     maxDiscount?: number; // admin setting
+    variants?: ProductVariant[];
+    selectedVariant?: string; // name of the selected variant
 }
 
 export interface ClientDetails {

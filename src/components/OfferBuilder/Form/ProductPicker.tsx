@@ -11,6 +11,7 @@ interface ProductPickerProps {
 
 export default function ProductPicker({ selectedProducts, onChange }: ProductPickerProps) {
     const [searchTerm, setSearchTerm] = useState('');
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const handleAddProduct = (product: Product) => {
         if (selectedProducts.length >= 6) {
@@ -26,6 +27,7 @@ export default function ProductPicker({ selectedProducts, onChange }: ProductPic
 
         onChange([...selectedProducts, newProduct]);
         setSearchTerm('');
+        setIsDropdownOpen(false);
     };
 
     const handleRemoveProduct = (index: number) => {
@@ -89,19 +91,31 @@ export default function ProductPicker({ selectedProducts, onChange }: ProductPic
                     className="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A8E8] text-sm disabled:bg-gray-100 disabled:cursor-not-allowed"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    onFocus={() => setIsDropdownOpen(true)}
+                    onBlur={() => setTimeout(() => setIsDropdownOpen(false), 200)}
                 />
-                {searchTerm && (
+                {isDropdownOpen && selectedProducts.length < 6 && (
                     <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto">
-                        {filteredProducts.map(product => (
-                            <button
-                                key={product.id}
-                                onClick={() => handleAddProduct(product)}
-                                className="w-full text-left px-4 py-2 hover:bg-gray-50 flex justify-between items-center text-sm"
-                            >
-                                <span className="font-medium text-[#001F3F]">{product.name}</span>
-                                <span className="text-gray-500">{product.price.toFixed(2)} PLN</span>
-                            </button>
-                        ))}
+                        {filteredProducts.map(product => {
+                            const hasVariants = product.variants && product.variants.length > 0;
+                            const displayPrice = hasVariants
+                                ? `od ${Math.min(...product.variants!.map(v => v.price)).toFixed(2)} PLN`
+                                : `${product.price.toFixed(2)} PLN`;
+
+                            return (
+                                <button
+                                    key={product.id}
+                                    onClick={() => handleAddProduct(product)}
+                                    className="w-full text-left px-4 py-2 hover:bg-gray-50 flex justify-between items-center text-sm gap-3"
+                                >
+                                    <div className="flex flex-col flex-1 min-w-0">
+                                        <span className="font-medium text-[#001F3F] truncate">{product.name}</span>
+                                        {product.category && <span className="text-[10px] text-gray-400 truncate mt-0.5">{product.category}</span>}
+                                    </div>
+                                    <span className="text-gray-500 whitespace-nowrap flex-shrink-0">{displayPrice}</span>
+                                </button>
+                            );
+                        })}
                         {filteredProducts.length === 0 && (
                             <div className="px-4 py-2 text-gray-400 text-sm">Brak wyników</div>
                         )}
@@ -119,8 +133,15 @@ export default function ProductPicker({ selectedProducts, onChange }: ProductPic
                         <div key={product.id} className="bg-gray-50 p-4 rounded-md border border-gray-100">
                             <div className="flex justify-between items-start mb-3">
                                 <div>
-                                    <h4 className="font-semibold text-[#001F3F]">{product.name}</h4>
-                                    <p className="text-xs text-gray-500">{product.description}</p>
+                                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                                        <h4 className="font-bold text-[#001F3F] text-lg">{product.name}</h4>
+                                        {product.category && (
+                                            <span className="px-2 py-0.5 bg-slate-100 text-slate-500 border border-slate-200 text-[10px] uppercase font-bold tracking-wider rounded-full">
+                                                {product.category}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <p className="text-xs text-gray-500 leading-relaxed pr-8">{product.description}</p>
                                 </div>
                                 <button
                                     onClick={() => handleRemoveProduct(index)}
@@ -152,14 +173,42 @@ export default function ProductPicker({ selectedProducts, onChange }: ProductPic
                                 </div>
                             </div>
 
+                            {/* Variant Selection (If Applicable) */}
+                            {product.variants && product.variants.length > 0 && (
+                                <div className="mb-4">
+                                    <label className="block text-xs font-medium text-gray-400 mb-1">Dostępne Warianty (Pojemność/Waga)</label>
+                                    <div className="flex gap-2 flex-wrap">
+                                        {product.variants.map(variant => (
+                                            <button
+                                                key={variant.name}
+                                                onClick={() => {
+                                                    handleUpdateProduct(index, 'selectedVariant', variant.name);
+                                                    handleUpdateProduct(index, 'price', variant.price);
+                                                }}
+                                                className={clsx(
+                                                    "px-3 py-1.5 text-xs rounded-md border transition-colors font-medium",
+                                                    product.selectedVariant === variant.name
+                                                        ? "bg-[#00A8E8] text-white border-[#00A8E8]"
+                                                        : "bg-white text-gray-600 border-gray-200 hover:bg-gray-50 -hover:border-gray-300"
+                                                )}
+                                            >
+                                                {variant.name} <span className={product.selectedVariant === variant.name ? "text-blue-100" : "text-gray-400"}>({variant.price.toFixed(2)} zł)</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                             <div className="grid grid-cols-4 gap-3 text-sm items-end">
                                 <div>
-                                    <label className="block text-xs font-medium text-gray-400 mb-1">Cena Kat.</label>
+                                    <label className="block text-xs font-medium text-gray-400 mb-1">Cena (PLN)</label>
                                     <input
                                         type="number"
                                         value={product.price}
-                                        readOnly
-                                        className="w-full px-2 py-1 border border-gray-200 rounded bg-gray-100 text-gray-500 cursor-not-allowed"
+                                        onChange={(e) => handleUpdateProduct(index, 'price', parseFloat(e.target.value))}
+                                        className="w-full px-2 py-1 border border-gray-200 rounded focus:ring-1 focus:ring-[#00A8E8]"
+                                        min={0}
+                                        step="0.01"
                                     />
                                 </div>
                                 <div>

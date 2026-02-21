@@ -1,6 +1,6 @@
 import React from 'react';
 import { Page, Text, View, Document, StyleSheet, Font, Image, Svg, Path, Circle } from '@react-pdf/renderer';
-import { OfferData, INDUSTRY_LABELS, Product } from '@/lib/types';
+import { OfferData, Product } from '@/lib/types';
 
 Font.register({
     family: 'Roboto',
@@ -58,27 +58,45 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         overflow: 'hidden',
     },
-    heroBgImage: {
+    heroBgContainer: {
         position: 'absolute',
         top: -50,
         left: 0,
         right: 0,
         bottom: -50,
-        opacity: 0.1,
+    },
+    heroBgOverlay: {
+        position: 'absolute',
+        top: -50,
+        left: 0,
+        right: 0,
+        bottom: -50,
+        backgroundColor: '#F1F5F9E6', // Mimics 0.9 opacity overlay over the background
+    },
+    heroBgImage: {
+        width: '100%',
+        height: '100%',
         objectFit: 'cover',
         transform: 'rotate(-6deg) scale(1.2)'
+    },
+    heroProductImageContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     heroProductImage: {
         width: 260,
         height: 260,
         objectFit: 'contain',
-        zIndex: 10,
     },
     overlayLeft: {
         position: 'absolute',
         bottom: 20,
         left: 20,
-        zIndex: 20,
     },
     productTitle: {
         fontSize: 24,
@@ -97,14 +115,12 @@ const styles = StyleSheet.create({
         top: 25,
         left: 20,
         alignItems: 'flex-start',
-        zIndex: 20,
     },
     overlayRightAttributes: {
         position: 'absolute',
         top: 25,
         right: 20,
         alignItems: 'flex-end',
-        zIndex: 20,
     },
     attributePill: {
         flexDirection: 'row',
@@ -138,7 +154,6 @@ const styles = StyleSheet.create({
         bottom: 20,
         right: 20,
         alignItems: 'flex-end',
-        zIndex: 20,
     },
     priceOld: {
         fontSize: 10,
@@ -416,10 +431,15 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                             <DocumentHeader offer={offer} />
 
                             <View style={styles.heroSection}>
-                                <Image src={BackgroundAsset} style={styles.heroBgImage} />
+                                <View style={styles.heroBgContainer}>
+                                    <Image src={BackgroundAsset} style={styles.heroBgImage} />
+                                    <View style={styles.heroBgOverlay} />
+                                </View>
 
                                 {heroProduct.image && (
-                                    <Image src={heroProduct.image} style={styles.heroProductImage} />
+                                    <View style={styles.heroProductImageContainer}>
+                                        <Image src={heroProduct.image} style={styles.heroProductImage} />
+                                    </View>
                                 )}
 
                                 {/* Pills Left */}
@@ -436,7 +456,9 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                                 <View style={styles.overlayLeft}>
                                     <Text style={styles.productTitle}>{heroProduct.name}</Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                        <Text style={styles.productSubtitle}>{INDUSTRY_LABELS[offer.industry]}</Text>
+                                        {heroProduct.category && (
+                                            <Text style={{ fontSize: 10, color: '#00A8E8', fontWeight: 'bold' }}>{heroProduct.category}</Text>
+                                        )}
                                         {heroProduct.code && <Text style={{ fontSize: 10, color: '#9CA3AF', marginLeft: 8, fontWeight: 'bold' }}>{heroProduct.code}</Text>}
                                     </View>
                                 </View>
@@ -461,20 +483,35 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                                         <Text style={[styles.tableHeaderCell, styles.colName]}>Produkt</Text>
                                         <Text style={[styles.tableHeaderCell, styles.colQty]}>Ilość</Text>
                                         <Text style={[styles.tableHeaderCell, styles.colPrice]}>Cena Netto</Text>
-                                        <Text style={[styles.tableHeaderCell, styles.colDisc]}>Rabat</Text>
+                                        {heroProduct.discount > 0 && <Text style={[styles.tableHeaderCell, styles.colDisc]}>Rabat</Text>}
                                         <Text style={[styles.tableHeaderCell, styles.colTotal]}>Wartość</Text>
                                     </View>
                                     <View style={styles.tableRow}>
                                         <View style={styles.colName}>
-                                            <Text style={{ fontSize: 10, fontWeight: 'bold', color: '#001F3F' }}>{heroProduct.name}</Text>
-                                            <Text style={{ fontSize: 8, color: '#64748B' }}>{heroProduct.description || '---'}</Text>
+                                            <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
+                                                <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#001F3F' }}>{heroProduct.name}</Text>
+                                                {heroProduct.selectedVariant && (
+                                                    <View style={{ backgroundColor: '#EFF6FF', paddingHorizontal: 5, paddingVertical: 2, borderRadius: 8, marginLeft: 6 }}>
+                                                        <Text style={{ fontSize: 6, fontWeight: 'bold', color: '#00A8E8', textTransform: 'uppercase' }}>
+                                                            {heroProduct.selectedVariant}
+                                                        </Text>
+                                                    </View>
+                                                )}
+                                            </View>
+                                            {heroProduct.category && <Text style={{ fontSize: 7, color: '#64748B', marginTop: 2 }}>{heroProduct.category}</Text>}
                                         </View>
                                         <Text style={[styles.text, styles.colQty]}>{heroProduct.quantity}</Text>
                                         <Text style={[styles.text, styles.colPrice]}>{heroProduct.price.toFixed(2)}</Text>
-                                        <Text style={[styles.text, styles.colDisc]}>{heroProduct.discount > 0 ? `-${heroProduct.discount}%` : '-'}</Text>
+                                        {heroProduct.discount > 0 && <Text style={[styles.text, styles.colDisc]}>-{heroProduct.discount}%</Text>}
                                         <Text style={[styles.textBold, styles.colTotal]}>{calculateLineTotal(heroProduct).toFixed(2)}</Text>
                                     </View>
                                 </View>
+                                {heroProduct.description && (
+                                    <View style={{ marginTop: 15, padding: 10, backgroundColor: '#F8FAFC', borderRadius: 4 }}>
+                                        <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#9CA3AF', textTransform: 'uppercase', marginBottom: 4 }}>Opis Produktu</Text>
+                                        <Text style={{ fontSize: 9, color: '#475569', lineHeight: 1.4 }}>{heroProduct.description}</Text>
+                                    </View>
+                                )}
                             </View>
                         </View>
                         <DocumentFooter salesRep={offer.salesRep} />
@@ -518,18 +555,29 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                             <Text style={[styles.tableHeaderCell, styles.colName]}>Produkt</Text>
                             <Text style={[styles.tableHeaderCell, styles.colQty]}>Ilość</Text>
                             <Text style={[styles.tableHeaderCell, styles.colPrice]}>Cena Netto</Text>
-                            <Text style={[styles.tableHeaderCell, styles.colDisc]}>Rabat</Text>
+                            {offer.products.some(p => p.discount > 0) && <Text style={[styles.tableHeaderCell, styles.colDisc]}>Rabat</Text>}
                             <Text style={[styles.tableHeaderCell, styles.colTotal]}>Wartość</Text>
                         </View>
                         {offer.products.map((p, i) => (
                             <View key={i} style={styles.tableRow}>
                                 <View style={styles.colName}>
-                                    <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#001F3F' }}>{p.name}</Text>
-                                    <Text style={{ fontSize: 7, color: '#64748B' }}>{p.description}</Text>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' }}>
+                                        <Text style={{ fontSize: 9, fontWeight: 'bold', color: '#001F3F' }}>{p.name}</Text>
+                                        {p.selectedVariant && (
+                                            <View style={{ backgroundColor: '#EFF6FF', paddingHorizontal: 5, paddingVertical: 2, borderRadius: 8, marginLeft: 6 }}>
+                                                <Text style={{ fontSize: 6, fontWeight: 'bold', color: '#00A8E8', textTransform: 'uppercase' }}>
+                                                    {p.selectedVariant}
+                                                </Text>
+                                            </View>
+                                        )}
+                                    </View>
+                                    {p.category && <Text style={{ fontSize: 7, color: '#64748B', marginTop: 2 }}>{p.category}</Text>}
                                 </View>
                                 <Text style={[styles.text, styles.colQty]}>{p.quantity}</Text>
                                 <Text style={[styles.text, styles.colPrice]}>{p.price.toFixed(2)}</Text>
-                                <Text style={[styles.text, styles.colDisc]}>{p.discount > 0 ? `-${p.discount}%` : '-'}</Text>
+                                {offer.products.some(prod => prod.discount > 0) && (
+                                    <Text style={[styles.text, styles.colDisc]}>{p.discount > 0 ? `-${p.discount}%` : '-'}</Text>
+                                )}
                                 <Text style={[styles.textBold, styles.colTotal]}>{calculateLineTotal(p).toFixed(2)}</Text>
                             </View>
                         ))}
