@@ -361,7 +361,7 @@ const DocumentFooter = ({ salesRep }: { salesRep: OfferData['salesRep'] }) => (
         <View style={styles.footerCol}>
             <Text style={styles.footerLabel}>Wyłączny importer produktów Transnet:</Text>
             <Text style={[styles.footerText, { fontWeight: 'bold', color: 'white' }]}>Pol-Frans Jacek Rybiński</Text>
-            <Text style={styles.footerText}>ul. Władysława Raczkiewicza 66</Text>
+            <Text style={styles.footerText}>ul. 1 Praskiego Pułku WP 66</Text>
             <Text style={styles.footerText}>05-075 Warszawa</Text>
             <Text style={styles.footerText}>NIP: 5211223886</Text>
             <Text style={[styles.footerText, { color: '#00A8E8', marginTop: 2 }]}>www.orapi-transnet.pl</Text>

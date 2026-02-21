@@ -15,7 +15,7 @@ export default function Footer({ salesRep }: FooterProps) {
                 <div className="text-xs text-gray-400 leading-relaxed">
                     <p className="uppercase font-bold tracking-wider mb-2 text-white">Wyłączny importer produktów Transnet:</p>
                     <p className="font-bold text-white">Pol-Frans Jacek Rybiński</p>
-                    <p>ul. Władysława Raczkiewicza 66</p>
+                    <p>ul. 1 Praskiego Pułku WP 66</p>
                     <p>05-075 Warszawa</p>
                     <p>NIP: 5211223886</p>
                     <div className="flex items-center gap-2 mt-2 text-[#00A8E8]">
