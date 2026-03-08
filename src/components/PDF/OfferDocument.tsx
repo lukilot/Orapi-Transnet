@@ -502,7 +502,11 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
 
                                 {/* Title (Left) */}
                                 <View style={[styles.overlayLeft, { maxWidth: '50%' }]}>
-                                    <Text style={[styles.productTitle, heroProduct.name.length > 30 ? { fontSize: 18 } : {}]}>{heroProduct.name}</Text>
+                                    <Text style={[styles.productTitle, heroProduct.name.length > 30 ? { fontSize: 18 } : {}]}>
+                                        {heroProduct.name.includes("Pompa dozująca Translav CAR PRO / ACID")
+                                            ? "Pompa dozująca\nTranslav CAR PRO / ACID"
+                                            : heroProduct.name}
+                                    </Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         {heroProduct.category && (
                                             <Text style={{ fontSize: 10, color: '#00A8E8', fontWeight: 'bold' }}>{heroProduct.category}</Text>
