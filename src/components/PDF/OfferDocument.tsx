@@ -441,7 +441,8 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                             fontWeight: 'black',
                             lineHeight: 1.2
                         }}>
-                            {offer.client.companyName || 'Szanownego Klienta'}
+                            {/* Force text-wrap to prevent mid-word breaks */}
+                            <Text style={{ flexWrap: 'wrap' }}>{offer.client.companyName || 'Szanownego Klienta'}</Text>
                         </Text>
                     </View>
                 </View>
@@ -478,7 +479,14 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
 
                                 {heroProduct.image && (
                                     <View style={styles.heroProductImageContainer}>
-                                        <Image src={heroProduct.image} style={styles.heroProductImage} />
+                                        <Image
+                                            src={heroProduct.image}
+                                            style={[
+                                                styles.heroProductImage,
+                                                // Shrink the image significantly if the title is very long to prevent overlap
+                                                heroProduct.name.length > 30 ? { width: 180, height: 180, marginTop: -20 } : {}
+                                            ]}
+                                        />
                                     </View>
                                 )}
 
@@ -493,8 +501,8 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                                 </View>
 
                                 {/* Title (Left) */}
-                                <View style={styles.overlayLeft}>
-                                    <Text style={styles.productTitle}>{heroProduct.name}</Text>
+                                <View style={[styles.overlayLeft, { maxWidth: '50%' }]}>
+                                    <Text style={[styles.productTitle, heroProduct.name.length > 30 ? { fontSize: 18 } : {}]}>{heroProduct.name}</Text>
                                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                         {heroProduct.category && (
                                             <Text style={{ fontSize: 10, color: '#00A8E8', fontWeight: 'bold' }}>{heroProduct.category}</Text>
