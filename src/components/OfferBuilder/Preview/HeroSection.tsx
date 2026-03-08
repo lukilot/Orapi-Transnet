@@ -135,9 +135,14 @@ export default function HeroSection({ industry, mainProduct }: HeroSectionProps)
             </div>
 
             {/* Product Name Title Overlay (Bottom Left) */}
-            <div className="absolute bottom-8 left-8 z-20">
-                <h2 className="text-4xl font-extrabold text-[#001F3F] tracking-tight">{product.name}</h2>
-                <div className="flex items-center gap-3 mt-1">
+            <div className="absolute bottom-8 left-8 z-20 max-w-[55%] pr-4">
+                <h2 className={clsx(
+                    "font-extrabold text-[#001F3F] tracking-tight leading-tight text-balance",
+                    product.name.length > 25 ? "text-3xl" : "text-4xl"
+                )}>
+                    {product.name}
+                </h2>
+                <div className="flex items-center gap-3 mt-2">
                     {product.category && (
                         <p className="text-[#00A8E8] font-bold text-sm tracking-wide">{product.category}</p>
                     )}

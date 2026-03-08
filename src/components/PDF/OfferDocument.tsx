@@ -434,7 +434,13 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                 <View style={{ flex: 1, justifyContent: 'center', paddingHorizontal: 50, zIndex: 10 }}>
                     <View style={{ borderLeftWidth: 4, borderColor: '#00A8E8', paddingLeft: 24, paddingVertical: 8 }}>
                         <Text style={{ fontFamily: 'Roboto', color: '#00A8E8', fontSize: 16, fontWeight: 'bold', marginBottom: 12, letterSpacing: 3, textTransform: 'uppercase' }}>OFERTA HANDLOWA DLA</Text>
-                        <Text style={{ fontFamily: 'Roboto', color: 'white', fontSize: 32, fontWeight: 'black', lineHeight: 1.2 }}>
+                        <Text style={{
+                            fontFamily: 'Roboto',
+                            color: 'white',
+                            fontSize: offer.client.companyName ? (offer.client.companyName.length > 60 ? 18 : offer.client.companyName.length > 40 ? 24 : 32) : 32,
+                            fontWeight: 'black',
+                            lineHeight: 1.2
+                        }}>
                             {offer.client.companyName || 'Szanownego Klienta'}
                         </Text>
                     </View>
