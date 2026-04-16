@@ -650,10 +650,10 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                                 </View>
                             </View>
 
-                            {totalNet < 1000 && (
+                            {totalNet < 2000 && (
                                 <View style={[styles.warningBox, { marginTop: 6, width: '100%' }]}>
                                     <Text style={styles.warningText}>
-                                        Zamówienie poniżej minimum! Brakuje {(1000 - totalNet).toFixed(2)} PLN netto.
+                                        Zamówienie poniżej minimum! Brakuje {(2000 - totalNet).toFixed(2)} PLN netto.
                                     </Text>
                                 </View>
                             )}
