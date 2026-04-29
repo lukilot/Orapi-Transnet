@@ -56,6 +56,12 @@ export default function ProductPicker({ selectedProducts, onChange }: ProductPic
         onChange(newProducts);
     };
 
+    const handleUpdateProductFields = (index: number, updates: Partial<Product>) => {
+        const newProducts = [...selectedProducts];
+        newProducts[index] = { ...newProducts[index], ...updates };
+        onChange(newProducts);
+    };
+
     const toggleAttribute = (index: number, feature: string) => {
         const newProducts = [...selectedProducts];
         const product = newProducts[index];
@@ -182,16 +188,21 @@ export default function ProductPicker({ selectedProducts, onChange }: ProductPic
                                             <button
                                                 key={variant.name}
                                                 onClick={() => {
-                                                    handleUpdateProduct(index, 'selectedVariant', variant.name);
-                                                    handleUpdateProduct(index, 'price', variant.price);
+                                                    const updates: Partial<Product> = {
+                                                        selectedVariant: variant.name,
+                                                        price: variant.price
+                                                    };
+                                                    
                                                     if (variant.image) {
-                                                        handleUpdateProduct(index, 'image', variant.image);
+                                                        updates.image = variant.image;
                                                     } else {
                                                         const originalProduct = MOCK_PRODUCTS.find(p => p.id === product.id.split('-')[0]);
                                                         if (originalProduct && originalProduct.image) {
-                                                            handleUpdateProduct(index, 'image', originalProduct.image);
+                                                            updates.image = originalProduct.image;
                                                         }
                                                     }
+                                                    
+                                                    handleUpdateProductFields(index, updates);
                                                 }}
                                                 className={clsx(
                                                     "px-3 py-1.5 text-xs rounded-md border transition-colors font-medium",
