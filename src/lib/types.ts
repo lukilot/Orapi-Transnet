@@ -34,6 +34,7 @@ export const AVAILABLE_FEATURES = [
 export interface ProductVariant {
     name: string; // e.g. "5 L", "20 L", "200 kg"
     price: number;
+    image?: string;
 }
 
 export interface Product {

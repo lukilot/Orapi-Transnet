@@ -184,6 +184,14 @@ export default function ProductPicker({ selectedProducts, onChange }: ProductPic
                                                 onClick={() => {
                                                     handleUpdateProduct(index, 'selectedVariant', variant.name);
                                                     handleUpdateProduct(index, 'price', variant.price);
+                                                    if (variant.image) {
+                                                        handleUpdateProduct(index, 'image', variant.image);
+                                                    } else {
+                                                        const originalProduct = MOCK_PRODUCTS.find(p => p.id === product.id.split('-')[0]);
+                                                        if (originalProduct && originalProduct.image) {
+                                                            handleUpdateProduct(index, 'image', originalProduct.image);
+                                                        }
+                                                    }
                                                 }}
                                                 className={clsx(
                                                     "px-3 py-1.5 text-xs rounded-md border transition-colors font-medium",
