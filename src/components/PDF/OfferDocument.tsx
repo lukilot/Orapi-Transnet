@@ -652,7 +652,7 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                                 </View>
                             </View>
 
-                            {productsNet < 2000 && (
+                            {offer.showLogisticsWarning && productsNet < 2000 && (
                                 <View style={[styles.warningBox, { marginTop: 6, width: '100%' }]}>
                                     <Text style={styles.warningText}>
                                         Zamówienie poniżej minimum! Brakuje {(2000 - productsNet).toFixed(2)} PLN netto.

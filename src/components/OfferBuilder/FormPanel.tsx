@@ -46,7 +46,8 @@ export default function FormPanel({ offer, onChange }: FormPanelProps) {
                     validUntil: offer.validUntil,
                     paymentMethod: offer.paymentMethod,
                     paymentTerm: offer.paymentTerm,
-                    shippingCost: offer.shippingCost
+                    shippingCost: offer.shippingCost,
+                    showLogisticsWarning: offer.showLogisticsWarning
                 }}
                 onChange={(details) => updateOffer(details)}
             />

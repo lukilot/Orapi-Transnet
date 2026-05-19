@@ -88,6 +88,7 @@ export interface OfferData {
     paymentMethod: string;
     paymentTerm: string;
     shippingCost?: number; // optional transport cost
+    showLogisticsWarning?: boolean; // show minimum logistics order warning
 }
 
 export const INITIAL_OFFER: OfferData = {

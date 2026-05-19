@@ -207,7 +207,7 @@ export default function PreviewPanel({ offer }: PreviewPanelProps) {
                                                     </div>
                                                 </div>
 
-                                                {totalLinesNet < 2000 && (
+                                                {offer.showLogisticsWarning && totalLinesNet < 2000 && (
                                                     <div className="p-2 bg-red-50 border border-red-200 rounded-md text-left">
                                                         <p className="text-red-700 text-[10px] font-bold leading-tight">ZAMÓWIENIE PONIŻEJ MINIMUM LOGISTYCZNEGO!<br />Brakuje {(2000 - totalLinesNet).toFixed(2)} PLN netto do darmowej dostawy.</p>
                                                     </div>
