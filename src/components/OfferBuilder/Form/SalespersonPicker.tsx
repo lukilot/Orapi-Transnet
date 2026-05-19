@@ -34,7 +34,7 @@ export default function SalespersonPicker({ value, onChange }: SalespersonPicker
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A8E8] text-sm"
                 >
                     {MOCK_SALES_REPS.map((rep) => (
-                        <option key={rep.email} value={rep.name}>
+                        <option key={rep.name} value={rep.name}>
                             {rep.name}
                         </option>
                     ))}
@@ -42,7 +42,7 @@ export default function SalespersonPicker({ value, onChange }: SalespersonPicker
 
                 <div className="mt-4 p-3 bg-gray-50 rounded text-sm text-gray-600">
                     <p><span className="font-semibold">Telefon:</span> {value.phone}</p>
-                    <p><span className="font-semibold">Email:</span> {value.email}</p>
+                    {value.email && <p><span className="font-semibold">Email:</span> {value.email}</p>}
                 </div>
             </div>
         </div>

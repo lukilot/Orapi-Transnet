@@ -370,7 +370,7 @@ const DocumentFooter = ({ salesRep }: { salesRep: OfferData['salesRep'] }) => (
             <Text style={styles.footerLabel}>Opiekun Handlowy</Text>
             <Text style={styles.footerName}>{salesRep.name}</Text>
             <Text style={styles.footerContact}>{salesRep.phone}</Text>
-            <Text style={styles.footerContact}>{salesRep.email}</Text>
+            {salesRep.email ? <Text style={styles.footerContact}>{salesRep.email}</Text> : null}
         </View>
     </View>
 );

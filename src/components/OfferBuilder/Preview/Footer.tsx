@@ -34,10 +34,12 @@ export default function Footer({ salesRep }: FooterProps) {
                             <span>{salesRep.phone}</span>
                             <Phone className="w-4 h-4 text-[#00A8E8]" />
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span>{salesRep.email}</span>
-                            <Mail className="w-4 h-4 text-[#00A8E8]" />
-                        </div>
+                        {salesRep.email && (
+                            <div className="flex items-center gap-2">
+                                <span>{salesRep.email}</span>
+                                <Mail className="w-4 h-4 text-[#00A8E8]" />
+                            </div>
+                        )}
                     </div>
                 </div>
 

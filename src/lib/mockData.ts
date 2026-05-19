@@ -34,7 +34,9 @@ export const MOCK_PRODUCTS: Product[] = [
 ];
 
 export const MOCK_SALES_REPS: import('./types').SalesRep[] = [
+    { name: "Błaszczyk Tomasz", phone: "+48 609 860 521", email: "tomasz@orapi.com.pl" },
     { name: "Florkowski Jacek", phone: "+48 602 175 962", email: "jacek.florkowski@orapi.com" },
+    { name: "Futa Marek", phone: "+48 509 777 909", email: "" },
     { name: "Główczyk Janusz", phone: "+48 508 018 545", email: "orapi.janusz@interia.pl" },
     { name: "Karwowski Ireneusz", phone: "+48 786 676 079", email: "i.karwowski.orapi@gmail.com" },
     { name: "Korzeniewski Bartosz", phone: "+48 696 197 600", email: "bartek.korzeniewski@orapi.com.pl" },
@@ -43,3 +45,4 @@ export const MOCK_SALES_REPS: import('./types').SalesRep[] = [
     { name: "Orapi Biuro", phone: "+48 692 986 344", email: "biuro@orapi.com" },
     { name: "Płocieniczak Bartosz", phone: "+48 576 439 351", email: "b.plocieniczak.orapi@gmail.com" }
 ];
+
