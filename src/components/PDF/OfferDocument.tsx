@@ -377,7 +377,9 @@ const DocumentFooter = ({ salesRep }: { salesRep: OfferData['salesRep'] }) => (
 
 export default function OfferDocument({ offer }: OfferDocumentProps) {
     const calculateLineTotal = (p: Product) => p.price * p.quantity * (1 - p.discount / 100);
-    const totalNet = offer.products.reduce((sum, p) => sum + calculateLineTotal(p), 0);
+    const productsNet = offer.products.reduce((sum, p) => sum + calculateLineTotal(p), 0);
+    const shipping = offer.shippingCost || 0;
+    const totalNet = productsNet + shipping;
     const vat = totalNet * 0.23;
     const totalGross = totalNet + vat;
 
@@ -650,10 +652,10 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                                 </View>
                             </View>
 
-                            {totalNet < 2000 && (
+                            {productsNet < 2000 && (
                                 <View style={[styles.warningBox, { marginTop: 6, width: '100%' }]}>
                                     <Text style={styles.warningText}>
-                                        Zamówienie poniżej minimum! Brakuje {(2000 - totalNet).toFixed(2)} PLN netto.
+                                        Zamówienie poniżej minimum! Brakuje {(2000 - productsNet).toFixed(2)} PLN netto.
                                     </Text>
                                 </View>
                             )}
@@ -662,9 +664,21 @@ export default function OfferDocument({ offer }: OfferDocumentProps) {
                         {/* Right Side: Totals */}
                         <View style={{ width: '48%', padding: 8, backgroundColor: '#F8FAFC', borderRadius: 4 }}>
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
-                                <Text style={styles.text}>Suma Netto:</Text>
-                                <Text style={styles.textBold}>{totalNet.toFixed(2)} PLN</Text>
+                                <Text style={styles.text}>{shipping > 0 ? 'Suma Netto (produkty):' : 'Suma Netto:'}</Text>
+                                <Text style={styles.textBold}>{productsNet.toFixed(2)} PLN</Text>
                             </View>
+                            {shipping > 0 && (
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4 }}>
+                                    <Text style={styles.text}>Transport:</Text>
+                                    <Text style={styles.textBold}>{shipping.toFixed(2)} PLN</Text>
+                                </View>
+                            )}
+                            {shipping > 0 && (
+                                <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 4, paddingTop: 4, borderTopWidth: 1, borderColor: '#E2E8F0' }}>
+                                    <Text style={styles.text}>Suma Netto:</Text>
+                                    <Text style={styles.textBold}>{totalNet.toFixed(2)} PLN</Text>
+                                </View>
+                            )}
                             <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 }}>
                                 <Text style={styles.text}>VAT (23%):</Text>
                                 <Text style={styles.textBold}>{vat.toFixed(2)} PLN</Text>

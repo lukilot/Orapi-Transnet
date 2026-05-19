@@ -5,9 +5,10 @@ interface PricingTableProps {
     products: Product[];
     hideTotals?: boolean;
     leftContent?: React.ReactNode;
+    shippingCost?: number;
 }
 
-export default function PricingTable({ products, hideTotals = false, leftContent }: PricingTableProps) {
+export default function PricingTable({ products, hideTotals = false, leftContent, shippingCost }: PricingTableProps) {
     const calculateTotal = (products: Product[]) => {
         return products.reduce((sum, p) => {
             const discountedPrice = p.price * (1 - p.discount / 100);
@@ -15,7 +16,9 @@ export default function PricingTable({ products, hideTotals = false, leftContent
         }, 0);
     };
 
-    const totalNet = calculateTotal(products);
+    const productsNet = calculateTotal(products);
+    const shipping = shippingCost || 0;
+    const totalNet = productsNet + shipping;
     const vat = totalNet * 0.23;
     const totalGross = totalNet + vat;
 
@@ -89,9 +92,21 @@ export default function PricingTable({ products, hideTotals = false, leftContent
                         </div>
                         <div className="w-[300px] shrink-0 bg-gray-50 p-4 rounded-lg border border-gray-100">
                             <div className="flex justify-between mb-2 text-gray-600">
-                                <span>Suma Netto:</span>
-                                <span className="font-medium">{totalNet.toFixed(2)} PLN</span>
+                                <span>Suma Netto (produkty):</span>
+                                <span className="font-medium">{productsNet.toFixed(2)} PLN</span>
                             </div>
+                            {shipping > 0 && (
+                                <div className="flex justify-between mb-2 text-gray-600">
+                                    <span>Transport:</span>
+                                    <span className="font-medium">{shipping.toFixed(2)} PLN</span>
+                                </div>
+                            )}
+                            {shipping > 0 && (
+                                <div className="flex justify-between mb-2 text-gray-600 pt-2 border-t border-gray-200">
+                                    <span>Suma Netto:</span>
+                                    <span className="font-medium">{totalNet.toFixed(2)} PLN</span>
+                                </div>
+                            )}
                             <div className="flex justify-between mb-2 text-gray-600">
                                 <span>VAT (23%):</span>
                                 <span className="font-medium">{vat.toFixed(2)} PLN</span>

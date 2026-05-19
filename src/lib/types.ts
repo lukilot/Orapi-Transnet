@@ -87,6 +87,7 @@ export interface OfferData {
     salesRep: SalesRep;
     paymentMethod: string;
     paymentTerm: string;
+    shippingCost?: number; // optional transport cost
 }
 
 export const INITIAL_OFFER: OfferData = {

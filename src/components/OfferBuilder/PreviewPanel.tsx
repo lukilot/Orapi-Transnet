@@ -73,6 +73,7 @@ export default function PreviewPanel({ offer }: PreviewPanelProps) {
     const handleNext = () => setCurrentPage(p => Math.min(totalPages - 1, p + 1));
 
     const totalLinesNet = offer.products.reduce((acc, p) => acc + (p.price * p.quantity * (1 - p.discount / 100)), 0);
+    const shippingCost = offer.shippingCost || 0;
 
     useEffect(() => {
         const updateScale = () => {
@@ -192,6 +193,7 @@ export default function PreviewPanel({ offer }: PreviewPanelProps) {
                                 <div className="flex-1">
                                     <PricingTable
                                         products={offer.products}
+                                        shippingCost={offer.shippingCost}
                                         leftContent={
                                             <div className="flex flex-col gap-2">
                                                 <div className="flex justify-between text-sm bg-gray-50 p-3 rounded-md border border-gray-100">

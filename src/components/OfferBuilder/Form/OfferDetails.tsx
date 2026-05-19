@@ -1,9 +1,9 @@
 import React from 'react';
 import { OfferData } from '@/lib/types';
-import { Calendar, Hash } from 'lucide-react';
+import { Calendar, Hash, Truck } from 'lucide-react';
 
 interface OfferDetailsProps {
-    data: Pick<OfferData, 'id' | 'date' | 'validUntil' | 'paymentMethod' | 'paymentTerm'>;
+    data: Pick<OfferData, 'id' | 'date' | 'validUntil' | 'paymentMethod' | 'paymentTerm' | 'shippingCost'>;
     onChange: (data: Partial<OfferData>) => void;
 }
 
@@ -12,6 +12,8 @@ export default function OfferDetails({ data, onChange }: OfferDetailsProps) {
         const { name, value } = e.target;
         onChange({ [name]: value });
     };
+
+    const shippingEnabled = data.shippingCost !== undefined;
 
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6">
@@ -87,6 +89,44 @@ export default function OfferDetails({ data, onChange }: OfferDetailsProps) {
                         />
                     </div>
                 </div>
+            </div>
+
+            {/* Shipping Cost Section */}
+            <div className="mt-5 pt-5 border-t border-gray-100">
+                <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-2 cursor-pointer select-none">
+                        <input
+                            type="checkbox"
+                            checked={shippingEnabled}
+                            onChange={(e) => {
+                                onChange({ shippingCost: e.target.checked ? 0 : undefined });
+                            }}
+                            className="w-4 h-4 rounded border-gray-300 text-[#00A8E8] focus:ring-[#00A8E8] cursor-pointer"
+                        />
+                        <Truck className="w-4 h-4 text-[#00A8E8]" />
+                        <span className="text-sm font-medium text-gray-700">Dodaj koszt transportu</span>
+                    </label>
+                </div>
+
+                {shippingEnabled && (
+                    <div className="mt-3 flex items-center gap-3">
+                        <div className="relative w-48">
+                            <input
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                value={data.shippingCost || ''}
+                                placeholder="0.00"
+                                onChange={(e) => {
+                                    const val = parseFloat(e.target.value);
+                                    onChange({ shippingCost: isNaN(val) ? 0 : val });
+                                }}
+                                className="w-full px-4 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#00A8E8] text-sm pr-14"
+                            />
+                            <span className="absolute right-3 top-2.5 text-xs text-gray-400 font-semibold">PLN netto</span>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );
